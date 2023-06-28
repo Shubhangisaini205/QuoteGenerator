@@ -10,9 +10,19 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-app.post("/quote", async (req, res) => {
+app.post("/generate", async (req, res) => {
+  const type = req.query.type
   const keyword = req.body.keyword
-  const completion_text = "Act as a expert Quote generator The user will provide you an keyword as an input ans you have to generate a Quote in English"
+  let completion_text = ""
+  if (type == "Quote") {
+    completion_text = `Act as a expert Quote generator The user will provide you an keyword as an input ans you have to generate a Quote in English`
+  } else if (type == "Shayari") {
+    completion_text = `Act as a expert shayari generator The user will provide you an keyword as an input ans you have to generate a Shayari in hindi`
+  } else if (type == "Story") {
+    completion_text = `Act as a expert Story generator The user will provide you an keyword as an input ans you have to generate a Story in English`
+  } else if (type == "Joke") {
+    completion_text = `Generate funny joke`
+  }
   const messages = [];
 
   messages.push({ role: "user", content: keyword });
@@ -25,8 +35,14 @@ app.post("/quote", async (req, res) => {
       model: "gpt-3.5-turbo",
       messages: messages,
     });
-    console.log(completion.data.choices[0].message.content.split("\n")[0])
-    res.send(JSON.stringify(completion.data.choices[0].message.content.split("\n")[0]))
+    if (type == "Shayari" || type == "Story") {
+      console.log(completion.data.choices[0].message.content.split("\n"))
+      res.send(JSON.stringify(completion.data.choices[0].message.content.split("\n")))
+    } else {
+      console.log(completion.data.choices[0].message.content.split("\n")[0])
+      res.send(JSON.stringify(completion.data.choices[0].message.content.split("\n")[0]))
+    }
+
   } catch (error) {
 
     res.send("something went wrong!!!")
