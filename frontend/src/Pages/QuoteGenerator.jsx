@@ -19,7 +19,7 @@ const QuoteGenerator = () => {
   console.log(type)
   const generateQuote = () => {
     setLoading(true)
-    fetch(`http://localhost:8080/generate?type=${type}`,
+    fetch(`https://quote-generator-xuh9.onrender.com/generate?type=${type}`,
       {
         method: 'POST',
         headers: { "content-type": "application/json" },
